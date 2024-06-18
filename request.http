@@ -1,0 +1,53 @@
+POST http://localhost:5000/api/user/register
+Content-Type: application/json
+
+{
+    "firstName": "Trần Văn",
+    "lastName": "Đạt",
+    "email": "ohmhaha01111213@gmail.com",
+    "password": "123123",
+    "dateOfBirth": "2002-10-01",
+    "isAdmin": true,
+    "isVerify": true
+}
+
+###
+POST http://localhost:5000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "ohmhaha01111213@gmail.com",
+    "password": "123123"
+}
+
+###
+GET http://localhost:5000/api/user/find?skip=0&limit=1&key=&sort=DESC
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExLCJpYXQiOjE3MTg3MTkxNzN9.m37Nsw_Gi4ZODUNDCZgcCRHAkXPc19wo1vhODJYrYcs
+
+{
+    "email": "ohmhaha01111213@gmail.com",
+    "password": "123123"
+}
+
+###
+PUT http://localhost:5000/api/user/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExLCJpYXQiOjE3MTg3MTkxNzN9.m37Nsw_Gi4ZODUNDCZgcCRHAkXPc19wo1vhODJYrYcs
+
+{
+    "firstName": "123131231231123123131231231123",
+    "lastName": "Đạt",
+    "password": "234234",
+    "dateOfBirth": "2002-10-01",
+    "isAdmin": false,
+    "isVerify": false
+}
+
+###
+DELETE  http://localhost:5000/api/user/10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExLCJpYXQiOjE3MTg3MTkxNzN9.m37Nsw_Gi4ZODUNDCZgcCRHAkXPc19wo1vhODJYrYcs
+
+{
+}
