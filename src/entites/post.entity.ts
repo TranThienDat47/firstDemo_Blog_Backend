@@ -1,4 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, ManyToOne, JoinColumn } from 'typeorm';
+import {
+   Entity,
+   PrimaryGeneratedColumn,
+   Column,
+   BeforeInsert,
+   BeforeUpdate,
+   ManyToOne,
+   JoinColumn,
+   ManyToMany,
+   JoinTable,
+} from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
 
@@ -46,11 +56,18 @@ export class Post {
    @Column({ default: () => 'CURRENT_TIMESTAMP', nullable: false })
    updatedAt: Date;
 
-   @ManyToOne(() => Category, (category) => category.posts)
-   @JoinColumn({
-      name: 'categoryID',
-   })
-   category: Category;
+   //after
+   @ManyToMany(() => Category)
+   @JoinTable()
+   categories: Category[];
+
+   @ManyToMany(() => User)
+   @JoinTable()
+   users: User[];
+
+   @ManyToMany(() => Post)
+   @JoinTable()
+   posts: Post[];
 
    @ManyToOne(() => User, (user) => user.posts)
    @JoinColumn({
@@ -61,6 +78,8 @@ export class Post {
    @BeforeInsert()
    @BeforeUpdate()
    updateKeySearch() {
+      this.updatedAt = new Date();
+
       this.keySeach = `${this.name} ${this.subName} ${this.description}`;
    }
 }

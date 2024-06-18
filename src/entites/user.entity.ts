@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, BeforeUpdate } from 'typeorm';
 import { Post } from './post.entity';
-import { MinLength } from 'class-validator';
+import { Comment } from './comment.entity';
+import { Notification } from './notitfication.entity';
 
 @Entity()
 export class User {
@@ -34,6 +35,21 @@ export class User {
    @CreateDateColumn({ nullable: false })
    updatedAt: Date;
 
+   //after
    @OneToMany(() => Post, (post) => post.user)
    posts: Post[];
+
+   @OneToMany(() => Comment, (comment) => comment.user)
+   comments: Comment[];
+
+   @OneToMany(() => Notification, (notification) => notification.user)
+   notifications: Notification;
+
+   @OneToMany(() => Notification, (notification) => notification.userSend)
+   sendNotifications: Notification;
+
+   @BeforeUpdate()
+   updateDates() {
+      this.updatedAt = new Date();
+   }
 }

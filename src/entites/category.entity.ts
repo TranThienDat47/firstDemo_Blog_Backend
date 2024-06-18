@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Post } from './post.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Category {
@@ -7,14 +6,16 @@ export class Category {
    _id: number;
 
    @Column({ nullable: false })
-   parentID: number;
-
-   @Column({ nullable: false })
    title: string;
 
    @Column({ nullable: false })
    description: string;
 
-   @OneToMany(() => Post, (post) => post.category)
-   posts: Post[];
+   //after
+   @ManyToOne(() => Category, (category) => category.children)
+   @JoinColumn({ name: 'parentID' })
+   parent: Category;
+
+   @OneToMany(() => Category, (category) => category.parent)
+   children: Category[];
 }
