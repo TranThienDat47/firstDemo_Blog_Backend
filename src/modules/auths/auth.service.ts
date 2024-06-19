@@ -1,5 +1,5 @@
 import { sign, verify } from 'jsonwebtoken';
-import { User } from '~/src/entites/user.entity';
+import { User } from '~/entites/user.entity';
 import UserService from '~modules/users/user.service';
 
 class AuthService {
@@ -17,7 +17,7 @@ class AuthService {
                return reject(err);
             }
             const userId = decoded._id;
-            UserService.findUserById(userId)
+            UserService.findById(userId)
                .then((user) => resolve(user))
                .catch((err) => reject(err));
          });

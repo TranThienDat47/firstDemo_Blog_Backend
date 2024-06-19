@@ -7,7 +7,7 @@
       "allowSyntheticDefaultImports": true,
       "baseUrl": "./",
       "paths": {
-         "~/*": ["./*"],
+         "~/*": ["./src/*"],
          "~entites/*": ["./src/entites/*"],
          "~configs/*": ["./src/configs/*"],
          "~modules/*": ["./src/modules/*"],

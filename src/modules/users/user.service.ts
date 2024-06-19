@@ -1,10 +1,10 @@
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { AppDataSource } from '~/ormconfig';
-import { User } from '~/src/entites/user.entity';
-import { CreateUserDTO } from '~/src/dto/users/createUserDTO';
-import { UpdateUserDTO } from '~/src/dto/users/updateUserDTO';
-import { LoginUserDTO } from '~/src/dto/users/loginUserDTO';
+import { AppDataSource } from '~/configs/db/ormconfig';
+import { User } from '~/entites/user.entity';
+import { CreateUserDTO } from '~/dto/users/createUserDTO';
+import { UpdateUserDTO } from '~/dto/users/updateUserDTO';
+import { LoginUserDTO } from '~/dto/users/loginUserDTO';
 
 class UserService {
    private userRepository: Repository<User>;
@@ -34,10 +34,10 @@ class UserService {
          });
    }
 
-   async createUser(createUserDTO: CreateUserDTO): Promise<User> {
+   async create(createUserDTO: CreateUserDTO): Promise<User> {
       return this.userRepository
          .findOneBy({ email: createUserDTO.email })
-         .then((existingUser) => {
+         .then(async (existingUser) => {
             if (existingUser) {
                return Promise.reject(new Error('Email already exists'));
             }
@@ -53,15 +53,15 @@ class UserService {
          });
    }
 
-   findUserByEmail(email: string): Promise<User | null> {
+   findByEmail(email: string): Promise<User | null> {
       return this.userRepository.findOneBy({ email });
    }
 
-   findUserById(id: number): Promise<User | null> {
-      return this.userRepository.findOneBy({ _id: id });
+   findById(_id: number): Promise<User | null> {
+      return this.userRepository.findOneBy({ _id });
    }
 
-   async findUsers(
+   async finds(
       skip: number = 0,
       limit: number = 10,
       key: string = '',
@@ -77,24 +77,52 @@ class UserService {
       return query.getMany();
    }
 
-   async updateUser(id: number, updateUserDTO: UpdateUserDTO): Promise<User | null> {
+   async update(_id: number, updateUserDTO: UpdateUserDTO): Promise<User | null> {
       if (updateUserDTO.password) {
-         return bcrypt.hash(updateUserDTO.password, 10).then((hashedPassword) => {
-            updateUserDTO.password = hashedPassword;
-            return this.userRepository.update(id, updateUserDTO).then(() => {
-               return this.userRepository.findOneBy({ _id: id });
+         return bcrypt
+            .hash(updateUserDTO.password, 10)
+            .then((hashedPassword) => {
+               updateUserDTO.password = hashedPassword;
+               return this.userRepository.update(_id, updateUserDTO).then((result) => {
+                  if (result.affected === 0) {
+                     throw new Error(`Failed to update user: No user found with id ${_id}`);
+                  }
+                  return this.userRepository.findOneBy({ _id });
+               });
+            })
+            .then((updatedUser) => {
+               if (!updatedUser) {
+                  throw new Error(`User with id ${_id} not found`);
+               }
+               return updatedUser;
+            })
+            .catch((error) => {
+               throw new Error(`Failed to update user: ${error.message}`);
             });
-         });
       } else {
-         return this.userRepository.update(id, updateUserDTO).then(() => {
-            return this.userRepository.findOneBy({ _id: id });
-         });
+         return this.userRepository
+            .update(_id, updateUserDTO)
+            .then((result) => {
+               if (result.affected === 0) {
+                  throw new Error(`Failed to update user: No user found with id ${_id}`);
+               }
+               return this.userRepository.findOneBy({ _id });
+            })
+            .then((updatedUser) => {
+               if (!updatedUser) {
+                  throw new Error(`User with id ${_id} not found`);
+               }
+               return updatedUser;
+            })
+            .catch((error) => {
+               throw new Error(`Failed to update user: ${error.message}`);
+            });
       }
    }
 
-   async deleteUser(id: number): Promise<Boolean> {
+   async delete(_id: number): Promise<Boolean> {
       return this.userRepository
-         .delete(id)
+         .delete(_id)
          .then((result) => result.affected > 0)
          .catch(() => false);
    }

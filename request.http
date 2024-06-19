@@ -1,3 +1,4 @@
+###########################---------USER---------##############################
 POST http://localhost:5000/api/user/register
 Content-Type: application/json
 
@@ -23,7 +24,7 @@ Content-Type: application/json
 ###
 GET http://localhost:5000/api/user/find?skip=0&limit=1&key=&sort=DESC
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImlhdCI6MTcxODcyNDI5MX0.i46ptDm0EMGo5QTqW_4750a7Q0XoHfoNNk8CKNcAzyY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImlhdCI6MTcxODc3MzIxOH0.AyL2m-TiCKxucuYC-FbSD2VABt2FNH4J9yJWV50LxJw
 
 {
     "email": "ohmhaha01111213@gmail.com",
@@ -31,9 +32,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImlhdCI6M
 }
 
 ###
-PUT http://localhost:5000/api/user/3
+PUT http://localhost:5000/api/user/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExLCJpYXQiOjE3MTg3MTkxNzN9.m37Nsw_Gi4ZODUNDCZgcCRHAkXPc19wo1vhODJYrYcs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImlhdCI6MTcxODc3MzIxOH0.AyL2m-TiCKxucuYC-FbSD2VABt2FNH4J9yJWV50LxJw
 
 {
     "firstName": "123131231231123123131231231123",
@@ -45,9 +46,70 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExLCJpYXQiO
 }
 
 ###
-DELETE  http://localhost:5000/api/user/10
+DELETE  http://localhost:5000/api/user/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjExLCJpYXQiOjE3MTg3MTkxNzN9.m37Nsw_Gi4ZODUNDCZgcCRHAkXPc19wo1vhODJYrYcs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImlhdCI6MTcxODc3MzIxOH0.AyL2m-TiCKxucuYC-FbSD2VABt2FNH4J9yJWV50LxJw
 
 {
 }
+
+
+###########################---------POST---------##############################
+POST http://localhost:5000/api/post/create
+Content-Type: application/json
+
+{
+    "userID": 1,
+    "name": "Bài viết 1",
+    "img": "https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg",
+    "subName": "SubName bài viết 1",
+    "description": "Không có mô tả",
+    "content": "Bài viết đầu tay của tôi, mong sẽ hay.",
+    "status": "Bản nháp",
+    "keySearch": "123123"
+}
+
+###
+GET http://localhost:5000/api/post/1
+Content-Type: application/json
+
+{
+}
+
+###
+GET http://localhost:5000/api/post/search?skip=0&limit=1&key=&sort=DESC
+Content-Type: application/json
+
+{
+}
+
+###
+PUT http://localhost:5000/api/post/12
+Content-Type: application/json
+
+{
+    "name": "Bài viết 1",
+    "img": "https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg",
+    "subName": "SubName bài viết 1",
+    "description": "Không có mô tả",
+    "content": "Bài viết đầu tay của tôi, mong sẽ hay.",
+    "status": 1,
+    "views": 1,
+    "countComments": 1,
+    "reacts": 1,
+    "isNew": false,
+    "keySearch": "qqqqqqqqqq"
+}
+
+###
+DELETE  http://localhost:5000/api/post/13
+Content-Type: application/json
+
+{
+}
+
+###########################---------COMMENT---------##############################
+
+
+###########################---------Notification---------##############################
+

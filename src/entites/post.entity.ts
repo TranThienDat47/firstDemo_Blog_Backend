@@ -29,8 +29,11 @@ export class Post {
    @Column({ nullable: false })
    subName: string;
 
-   @Column({ nullable: false })
+   @Column({ length: 2225, nullable: false })
    description: string;
+
+   @Column({ type: 'longtext', nullable: false })
+   content: string;
 
    @Column({ default: 'Bản nháp', nullable: false })
    status: string;
@@ -48,7 +51,7 @@ export class Post {
    countComments: number;
 
    @Column({ default: '', nullable: false })
-   keySeach: string;
+   keySearch: string;
 
    @Column({ default: () => 'CURRENT_TIMESTAMP', nullable: false })
    createdAt: Date;
@@ -69,7 +72,7 @@ export class Post {
    @JoinTable()
    posts: Post[];
 
-   @ManyToOne(() => User, (user) => user.posts)
+   @ManyToOne(() => User, (user) => user.posts, { nullable: false })
    @JoinColumn({
       name: 'userID',
    })
@@ -80,6 +83,12 @@ export class Post {
    updateKeySearch() {
       this.updatedAt = new Date();
 
-      this.keySeach = `${this.name} ${this.subName} ${this.description}`;
+      if (!this.keySearch) {
+         if (this.name || this.subName || this.description) {
+            this.keySearch = `${this.name} ${this.subName} ${this.description}`;
+         } else {
+            this.keySearch = '';
+         }
+      }
    }
 }

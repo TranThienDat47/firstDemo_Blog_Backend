@@ -1,4 +1,4 @@
-import { AppDataSource } from '~/ormconfig';
+import { AppDataSource } from '~/configs/db/ormconfig';
 
 export const connectDatabase = async () => {
    try {

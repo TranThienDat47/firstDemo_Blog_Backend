@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import UserService from './user.service';
-import { CreateUserDTO } from '~/src/dto/users/createUserDTO';
-import { UpdateUserDTO } from '~/src/dto/users/updateUserDTO';
-import { ResponseData } from '~/src/globals/globalClass';
-import { HttpMessage, HttpStatus } from '~/src/globals/globalEnum';
-import { LoginUserDTO } from '~/src/dto/users/loginUserDTO';
+import { CreateUserDTO } from '~/dto/users/createUserDTO';
+import { UpdateUserDTO } from '~/dto/users/updateUserDTO';
+import { ResponseData } from '~/globals/globalClass';
+import { HttpMessage, HttpStatus } from '~/globals/globalEnum';
+import { LoginUserDTO } from '~/dto/users/loginUserDTO';
 import AuthService from '~modules/auths/auth.service';
 
 class UserController {
@@ -35,7 +35,7 @@ class UserController {
    async register(req: Request, res: Response): Promise<Response> {
       const createUserDTO: CreateUserDTO = req.body;
 
-      return UserService.createUser(createUserDTO)
+      return UserService.create(createUserDTO)
          .then((user) => {
             const responseData = new ResponseData(true, user, HttpMessage.CREATED, HttpStatus.CREATED);
             return res.status(HttpStatus.CREATED).json(responseData);
@@ -54,7 +54,7 @@ class UserController {
    async findUserByEmail(req: Request, res: Response): Promise<Response> {
       const email: string = req.params.email;
 
-      return UserService.findUserByEmail(email)
+      return UserService.findByEmail(email)
          .then((user) => {
             const responseData = new ResponseData(true, user, HttpMessage.SUCCESS, HttpStatus.SUCCESS);
             return res.status(HttpStatus.SUCCESS).json(responseData);
@@ -71,9 +71,9 @@ class UserController {
    }
 
    async findUserById(req: Request, res: Response): Promise<Response> {
-      const id: number = parseInt(req.params.id);
+      const _id: number = parseInt(req.params._id);
 
-      return UserService.findUserById(id)
+      return UserService.findById(_id)
          .then((user) => {
             const responseData = new ResponseData(true, user, HttpMessage.SUCCESS, HttpStatus.SUCCESS);
             return res.status(HttpStatus.SUCCESS).json(responseData);
@@ -95,7 +95,7 @@ class UserController {
       const key: string = (req.query.key as string) || '';
       const sort: 'ASC' | 'DESC' = (req.query.sort as 'ASC' | 'DESC') || 'ASC';
 
-      return UserService.findUsers(skip, limit, key, sort)
+      return UserService.finds(skip, limit, key, sort)
          .then((users) => {
             const responseData = new ResponseData(true, users, HttpMessage.SUCCESS, HttpStatus.SUCCESS);
             return res.status(HttpStatus.SUCCESS).json(responseData);
@@ -112,10 +112,10 @@ class UserController {
    }
 
    async updateUser(req: Request, res: Response): Promise<Response> {
-      const id: number = parseInt(req.params.id);
+      const _id: number = parseInt(req.params._id);
       const updateUserDTO: UpdateUserDTO = req.body;
 
-      return UserService.updateUser(id, updateUserDTO)
+      return UserService.update(_id, updateUserDTO)
          .then((user) => {
             const responseData = new ResponseData(true, user, HttpMessage.SUCCESS, HttpStatus.SUCCESS);
             return res.status(HttpStatus.SUCCESS).json(responseData);
@@ -132,12 +132,17 @@ class UserController {
    }
 
    async deleteUser(req: Request, res: Response): Promise<Response> {
-      const id: number = parseInt(req.params.id);
+      const _id: number = parseInt(req.params._id);
 
-      return UserService.deleteUser(id)
+      return UserService.delete(_id)
          .then((result) => {
-            const responseData = new ResponseData(true, result, HttpMessage.NO_CONTENT, HttpStatus.NO_CONTENT);
-            return res.json(responseData);
+            const responseData = new ResponseData(
+               true,
+               result,
+               result ? HttpMessage.SUCCESS : HttpMessage.NOT_FOUND,
+               result ? HttpStatus.SUCCESS : HttpStatus.NOT_FOUND,
+            );
+            return res.status(result ? HttpStatus.SUCCESS : HttpStatus.NOT_FOUND).json(responseData);
          })
          .catch((error) => {
             const responseData = new ResponseData(
